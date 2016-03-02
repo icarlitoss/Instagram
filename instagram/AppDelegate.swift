@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+       //***Parse integrations here
+        
+                // Initialize Parse
+                // Set applicationId and server based on the values in the Heroku settings.
+                // clientKey is not used on Parse open source unless explicitly configured
+                Parse.initializeWithConfiguration(
+                    ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                        configuration.applicationId = "Instagram"
+                        configuration.clientKey = "kdnHN^2983kjdkjhJHDWILH9(*!@Km"
+                        configuration.server = "https://salty-refuge-16463.herokuapp.com/parse"
+                    })
+                )
+        
+        
+        
         return true
     }
 
