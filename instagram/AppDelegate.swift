@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Bolts
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 Parse.initializeWithConfiguration(
                     ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
                         configuration.applicationId = "instagram"
-                        configuration.clientKey = "password"
+                        configuration.clientKey = "LkdL89DSUhkljh7&@(#*jDKjhnj"
                         configuration.server = "https://salty-refuge-16463.herokuapp.com/parse"
                     })
                 )
@@ -35,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+   
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
