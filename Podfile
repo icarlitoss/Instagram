@@ -6,7 +6,8 @@ use_frameworks!
 target 'instagram' do
 
     pod 'Parse'
-    
+    pod 'AFNetworking'
+    pod 'ParseUI'
 end
 
 target 'instagramTests' do

@@ -8,7 +8,6 @@
 
 import UIKit
 import Parse
-import Bolts
 import ParseUI
 
 
@@ -21,6 +20,12 @@ class ComposeViewController: UIViewController, UIImagePickerControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         captionTextView.delegate = self
+        var imageView = previewImage
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("addImageTapped:"))
+        imageView.userInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
+        
+
 
         // Do any additional setup after loading the view.
     }
@@ -30,71 +35,57 @@ class ComposeViewController: UIViewController, UIImagePickerControllerDelegate, 
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func addImageTapped(sender: AnyObject) {
+    
+    
+    
+    @IBAction func addImageTapped(img: AnyObject) {
         
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
-        imagePicker.allowsEditing = false
-        
-        
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        let vc = UIImagePickerController()
+        vc.delegate = self
+        vc.allowsEditing = true
+        vc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        self.presentViewController(vc, animated: true, completion: nil)
         
     }
     
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        self.previewImage.image = image
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
-        
+    func imagePickerController(picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+            let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+            
+            previewImage.image = editedImage
+            dismissViewControllerAnimated(true, completion: { () -> Void in
+            })
     }
     
-    
-    func textViewShouldEndEditing(textView: UITextView) -> Bool {
-        captionTextView.resignFirstResponder()
-        return true
+    func resize(image: UIImage, newSize: CGSize) -> UIImage {
+        let resizeImageView = UIImageView(frame: CGRectMake(0, 0, newSize.width, newSize.height))
+        resizeImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        resizeImageView.image = image
+        
+        UIGraphicsBeginImageContext(resizeImageView.frame.size)
+        resizeImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
 
     @IBAction func composeTapped(sender: AnyObject) {
         
-//        let date = NSDate()
-//        
-//        let dateFormatter = NSDateFormatter()
-//        
-//        dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-//        
-//        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-//        
-//        let localDate = dateFormatter.stringFromDate(date)
-//        
-//        
-//        let imageToBeUploaded = self.previewImage.image
-//        let imageData = UIImagePNGRepresentation(imageToBeUploaded!)!
-//        
-//        let file: PFFile = PFFile(data: imageData)!
-////
-////        let fileCaption: String = self.captionTextView.text
-////
-////        let photoToUpload = PFObject(className:"Posts")
-////        photoToUpload["Image"] = file
-////        photoToUpload["Caption"] = fileCaption
-////        photoToUpload["addedBy"] = PFUser.currentUser()?.username
-////        photoToUpload["date"] = localDate
-////        
-////        photoToUpload.save()
-////        
-////        print("Successfully Posted.")
-//        
-//        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("postsController")
-//        self.presentViewController(vc!, animated: true, completion: nil)
-//        
-        
-        
-        
+        UserMedia.postUserImage(previewImage.image, withCaption: captionTextView.text) { (success: Bool, error: NSError?) -> Void in
+            if success {
+                print("Posted to Parse")
+                self.previewImage.image = nil
+                self.captionTextView.text = ""
+                
+            }
+            else {
+                print("Can't post to parse")
+            }
+        }
     }
-    
+
     
     /*
     // MARK: - Navigation
