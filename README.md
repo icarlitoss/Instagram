@@ -46,6 +46,8 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 Describe any challenges encountered while building the app.
 
+The challenges encountero where the addition to bars passing data between them. Also, the persistance user was a little chanllenging understanding what posts should be displayed in the Home Screen
+
 ## License
 
     Copyright [2016] [Carlos]
